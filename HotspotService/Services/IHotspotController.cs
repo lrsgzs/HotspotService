@@ -1,0 +1,10 @@
+using HotspotService.Models;
+
+namespace HotspotService.Services;
+
+public interface IHotspotController
+{
+    Task<HotspotActualState> GetStateAsync(CancellationToken cancellationToken);
+
+    Task SetStateAsync(GuardTargetState target, CancellationToken cancellationToken);
+}

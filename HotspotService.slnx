@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="HotspotService/HotspotService.csproj" />
+  <Project Path="HotspotService.Tests/HotspotService.Tests.csproj" />
+  <Project Path="HotspotService.BehaviorTests/HotspotService.BehaviorTests.csproj" />
+</Solution>
