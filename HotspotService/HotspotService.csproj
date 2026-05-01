@@ -7,11 +7,11 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <ClassIslandPluginSdkVersion>1.7.106.2-dev-v2</ClassIslandPluginSdkVersion>
+        <ClassIslandPluginSdkVersion>2.0.0.2</ClassIslandPluginSdkVersion>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="ClassIsland.PluginSdk" Version="$(ClassIslandPluginSdkVersion)">
+        <PackageReference Include="ClassIsland.PluginSdk" Version="$(ClassIslandPluginSdkVersion)" GeneratePathProperty="true">
             <ExcludeAssets>runtime; native</ExcludeAssets>
         </PackageReference>
     </ItemGroup>
@@ -23,9 +23,36 @@
         <None Update="README.md">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
+        <None Update="LICENSE">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </None>
         <None Update="icon.png">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
+
+    <Target Name="CreateCipxFromPublishOutput"
+            AfterTargets="Publish"
+            Condition="'$(CreateCipx)'=='true'">
+        <PropertyGroup>
+            <CipxPackageOutputDirectory>$(MSBuildProjectDirectory)\cipx</CipxPackageOutputDirectory>
+            <CipxPackageOutputName>$(MSBuildProjectName).cipx</CipxPackageOutputName>
+            <ClassIslandPublishCipxOutputPath>$(CipxPackageOutputDirectory)\$(CipxPackageOutputName)</ClassIslandPublishCipxOutputPath>
+        </PropertyGroup>
+
+        <Error Condition="Exists('$(PublishDir)manifest.yml') != 'true'"
+               Code="CISDK0001"
+               Text="插件清单 manifest.yml 在发布目录中不存在" />
+        <MakeDir Directories="$(CipxPackageOutputDirectory)"
+                 Condition="Exists('$(CipxPackageOutputDirectory)') != 'true'" />
+        <ZipDirectory SourceDirectory="$(PublishDir)"
+                      Overwrite="true"
+                      DestinationFile="$(ClassIslandPublishCipxOutputPath)" />
+        <Delete Files="$(CipxPackageOutputDirectory)\checksums.md"
+                Condition="Exists('$(CipxPackageOutputDirectory)\checksums.md')" />
+        <Exec Command="$(PowershellBinaryName) -ep bypass -NoLogo -File &quot;$(PkgClassIsland_PluginSdk)\build\net8.0\generate-md5.ps1&quot; &quot;$(CipxPackageOutputDirectory)&quot;"
+              Condition="'$(GenerateHashSummary)'=='true'" />
+    </Target>
 
 </Project>

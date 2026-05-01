@@ -4,10 +4,16 @@
 # 插件清单格式：https://docs.classisland.tech/zh-cn/latest/dev/plugins/create-project/#%E6%8F%92%E4%BB%B6%E6%B8%85%E5%8D%95%E6%96%87%E4%BB%B6
 
 id: HotspotService
-name: 移动热点守护
+name: 移动热点守护助手
 description: 为 ClassIsland 提供 Windows 移动热点守护、守护目标同步与自动化 / 规则集接入能力。
 entranceAssembly: "HotspotService.dll"
 url: https://github.com/Alan-CRL/HotspotService
 version: 0.2.0.0
 apiVersion: 2.0.0.0
 author: AlanCRL
+supportedOSPlatforms:
+  - Windows
+
+repoOwner: Alan-CRL
+repoName: HotspotService
+assetsRoot: main/HotspotService
